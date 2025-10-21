@@ -5,9 +5,14 @@ import { Amplify } from 'aws-amplify';
 import outputs from '@/amplify_outputs.json';
 import '@aws-amplify/ui-react/styles.css';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import { CookieStorage } from 'aws-amplify/utils';
 
-Amplify.configure(outputs);
+cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
+
+Amplify.configure(outputs, {
+  ssr: true
+});
 
 export default function LoginPage() {
   const router = useRouter();
