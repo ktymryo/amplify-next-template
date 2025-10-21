@@ -5,7 +5,7 @@ const schema = a.schema({
     .model({
       content: a.string(),
     })
-    .authorization((allow) => [allow.authenticated("iam")]),
+    .authorization((allow) => [allow.authenticated("identityPool")]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -13,6 +13,6 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "iam",
+    defaultAuthorizationMode: "identityPool",
   },
 });
