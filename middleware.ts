@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { runWithAmplifyServerContext } from "@aws-amplify/adapter-nextjs";
+import { fetchAuthSession } from "aws-amplify/auth/server";
+import { runWithAmplifyServerContext } from "aws-amplify/adapter-nextjs";
 import outputs from "@/amplify_outputs.json";
 
 export async function middleware(request: NextRequest) {
@@ -8,7 +9,11 @@ export async function middleware(request: NextRequest) {
   await runWithAmplifyServerContext({
     nextServerContext: { request, response },
     operation: async (contextSpec) => {
-      // This ensures Amplify can access cookies in Server Components
+      try {
+        await fetchAuthSession(contextSpec);
+      } catch (error) {
+        // User is not authenticated
+      }
     },
   });
 
@@ -17,12 +22,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
