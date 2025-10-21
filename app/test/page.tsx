@@ -3,12 +3,12 @@ import { cookies } from 'next/headers';
 import type { Schema } from '@/amplify/data/resource';
 import outputs from '@/amplify_outputs.json';
 
-const cookiesClient = generateServerClientUsingCookies<Schema>({
-  config: outputs,
-  cookies,
-});
-
 export default async function TestPage() {
+  const cookiesClient = generateServerClientUsingCookies<Schema>({
+    config: outputs,
+    cookies,
+  });
+
   console.log('Starting parallel queries...');
   
   try {
