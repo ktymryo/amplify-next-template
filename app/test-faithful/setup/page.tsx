@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation';
 export default async function SetupPage({
   searchParams,
 }: {
-  searchParams: { action?: string };
+  searchParams: Promise<{ action?: string }>;
 }) {
-  if (searchParams.action === 'create') {
+  const params = await searchParams;
+  
+  if (params.action === 'create') {
     // Space作成
     await cookiesClient.models.Space.create({
       id: 'test-space-id',

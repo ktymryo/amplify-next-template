@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation';
 export default async function CleanupPage({
   searchParams,
 }: {
-  searchParams: { action?: string };
+  searchParams: Promise<{ action?: string }>;
 }) {
-  if (searchParams.action === 'delete') {
+  const params = await searchParams;
+  
+  if (params.action === 'delete') {
     // 全StorageItem削除
     const items = await cookiesClient.models.StorageItem.list();
     for (const item of items.data) {
