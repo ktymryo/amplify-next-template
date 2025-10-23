@@ -12,22 +12,16 @@ export default async function TestPage() {
   console.log('Starting parallel queries...');
   
   try {
-    // Execute 6 queries in parallel to exceed 5 RPS limit
-    const results = await Promise.all([
-      cookiesClient.models.Todo.list(),
-      cookiesClient.models.Todo.list(),
-      cookiesClient.models.Todo.list(),
-      cookiesClient.models.Todo.list(),
-      cookiesClient.models.Todo.list(),
-      cookiesClient.models.Todo.list(),
-    ]);
+    // Execute 20 queries in parallel to test rate limits
+    const queries = Array(20).fill(null).map(() => cookiesClient.models.Todo.list());
+    const results = await Promise.all(queries);
     
     console.log('All queries completed successfully');
     
     return (
       <div style={{ padding: '20px' }}>
         <h1>Rate Limit Test</h1>
-        <p>✅ Successfully executed 6 parallel queries</p>
+        <p>✅ Successfully executed 20 parallel queries</p>
         <p>Total results: {results.reduce((acc, r) => acc + (r.data?.length || 0), 0)}</p>
       </div>
     );

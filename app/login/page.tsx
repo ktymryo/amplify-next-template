@@ -1,18 +1,8 @@
 "use client";
 
 import { Authenticator } from '@aws-amplify/ui-react';
-import { Amplify } from 'aws-amplify';
-import outputs from '@/amplify_outputs.json';
 import '@aws-amplify/ui-react/styles.css';
 import { useRouter } from 'next/navigation';
-import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
-import { CookieStorage } from 'aws-amplify/utils';
-
-cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
-
-Amplify.configure(outputs, {
-  ssr: true
-});
 
 export default function LoginPage() {
   const router = useRouter();

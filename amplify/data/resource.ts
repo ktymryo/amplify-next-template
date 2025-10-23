@@ -6,6 +6,20 @@ const schema = a.schema({
       content: a.string(),
     })
     .authorization((allow) => [allow.authenticated("identityPool")]),
+  
+  Space: a
+    .model({
+      name: a.string(),
+    })
+    .authorization((allow) => [allow.authenticated("identityPool")]),
+  
+  StorageItem: a
+    .model({
+      name: a.string(),
+      parentId: a.id(),
+    })
+    .secondaryIndexes((index) => [index("parentId")])
+    .authorization((allow) => [allow.authenticated("identityPool")]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
