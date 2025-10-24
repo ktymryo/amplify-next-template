@@ -24,17 +24,6 @@ export default async function Page() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Faithful Reproduction Test</h1>
-      <div style={{ marginBottom: '20px' }}>
-        <button 
-          onClick={() => window.location.reload()} 
-          style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
-        >
-          連続実行（リロード）
-        </button>
-        <p style={{ fontSize: '12px', color: '#666' }}>
-          このボタンを素早く連続でクリックして、フォルダ間の素早い移動を再現
-        </p>
-      </div>
       <div>
         <h2>Space</h2>
         <pre>{JSON.stringify(space.data, null, 2)}</pre>
