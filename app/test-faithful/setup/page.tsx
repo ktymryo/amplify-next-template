@@ -9,15 +9,23 @@ export default async function SetupPage({
   const params = await searchParams;
   
   if (params.action === 'delete') {
-    // 全StorageItemを削除（ページネーション対応）
+    // 全StorageItemを削除
+    const allItems = [];
     let token: string | null | undefined = undefined;
-    do {
-      const result = await cookiesClient.models.StorageItem.list({ nextToken: token });
-      for (const item of result.data) {
-        await cookiesClient.models.StorageItem.delete({ id: item.id });
-      }
-      token = result.nextToken;
-    } while (token);
+    
+    const firstResponse = await cookiesClient.models.StorageItem.list();
+    allItems.push(...firstResponse.data);
+    token = firstResponse.nextToken;
+    
+    while (token) {
+      const response = await cookiesClient.models.StorageItem.list({ nextToken: token });
+      allItems.push(...response.data);
+      token = response.nextToken;
+    }
+
+    for (const item of allItems) {
+      await cookiesClient.models.StorageItem.delete({ id: item.id });
+    }
 
     // 全Spaceを削除
     const { data: spaces } = await cookiesClient.models.Space.list();
