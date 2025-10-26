@@ -12,11 +12,11 @@ export default async function SetupPage({
     // 全StorageItemを削除（ページネーション対応）
     let token: string | null | undefined = undefined;
     do {
-      const { data: items, nextToken } = await cookiesClient.models.StorageItem.list({ nextToken: token });
-      for (const item of items) {
+      const result = await cookiesClient.models.StorageItem.list({ nextToken: token });
+      for (const item of result.data) {
         await cookiesClient.models.StorageItem.delete({ id: item.id });
       }
-      token = nextToken;
+      token = result.nextToken;
     } while (token);
 
     // 全Spaceを削除
