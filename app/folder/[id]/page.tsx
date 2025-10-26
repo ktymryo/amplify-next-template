@@ -28,10 +28,41 @@ export default async function FolderPage({
     breadcrumb = await getBreadcrumbData(id);
   }
   
+  // 全フォルダ一覧を取得（サイドバー用）
+  const allFolders = await cookiesClient.models.StorageItem.list();
+  
   console.log(`=== Folder loaded: ${children.data.length} items ===`);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+    <div style={{ display: 'flex', fontFamily: 'sans-serif' }}>
+      {/* サイドバー - 全フォルダ一覧 */}
+      <div style={{ width: '250px', padding: '20px', background: '#f5f5f5', borderRight: '2px solid #ddd', minHeight: '100vh' }}>
+        <h3>📂 All Folders</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '5px' }}>
+            <Link href="/folder/root" style={{ color: '#0066cc', textDecoration: 'none' }}>
+              🏠 Root
+            </Link>
+          </li>
+          {allFolders.data.map((folder) => (
+            <li key={folder.id} style={{ marginBottom: '5px' }}>
+              <Link 
+                href={`/folder/${folder.id}`}
+                style={{ 
+                  color: folder.id === id ? '#ff6600' : '#0066cc',
+                  textDecoration: 'none',
+                  fontWeight: folder.id === id ? 'bold' : 'normal'
+                }}
+              >
+                📁 {folder.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* メインコンテンツ */}
+      <div style={{ flex: 1, padding: '20px' }}>
       <h1>📁 Folder Browser</h1>
       
       {/* パンくずリスト */}
@@ -90,6 +121,7 @@ export default async function FolderPage({
             ))}
           </ul>
         )}
+      </div>
       </div>
     </div>
   );
