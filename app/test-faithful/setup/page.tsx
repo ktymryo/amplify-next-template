@@ -8,6 +8,22 @@ export default async function SetupPage({
 }) {
   const params = await searchParams;
   
+  if (params.action === 'delete') {
+    // 全StorageItemを削除
+    const { data: items } = await cookiesClient.models.StorageItem.list();
+    for (const item of items) {
+      await cookiesClient.models.StorageItem.delete({ id: item.id });
+    }
+
+    // 全Spaceを削除
+    const { data: spaces } = await cookiesClient.models.Space.list();
+    for (const space of spaces) {
+      await cookiesClient.models.Space.delete({ id: space.id });
+    }
+
+    redirect('/test-faithful/setup');
+  }
+  
   if (params.action === 'create') {
     // Space作成
     await cookiesClient.models.Space.create({
@@ -40,9 +56,13 @@ export default async function SetupPage({
   return (
     <div style={{ padding: '20px' }}>
       <h1>Setup Test Data (3 folders with 30 files each)</h1>
-      <form>
+      <form style={{ marginBottom: '10px' }}>
         <input type="hidden" name="action" value="create" />
         <button type="submit">Create Test Data</button>
+      </form>
+      <form>
+        <input type="hidden" name="action" value="delete" />
+        <button type="submit" style={{ backgroundColor: '#dc3545', color: 'white' }}>Delete All Data</button>
       </form>
     </div>
   );
