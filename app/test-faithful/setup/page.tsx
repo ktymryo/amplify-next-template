@@ -10,14 +10,14 @@ export default async function SetupPage({
   
   if (params.action === 'delete') {
     // 全StorageItemを削除（ページネーション対応）
-    let nextToken: string | null | undefined = undefined;
+    let token: string | null | undefined = undefined;
     do {
-      const { data: items, nextToken: token } = await cookiesClient.models.StorageItem.list({ nextToken });
+      const { data: items, nextToken } = await cookiesClient.models.StorageItem.list({ nextToken: token });
       for (const item of items) {
         await cookiesClient.models.StorageItem.delete({ id: item.id });
       }
-      nextToken = token;
-    } while (nextToken);
+      token = nextToken;
+    } while (token);
 
     // 全Spaceを削除
     const { data: spaces } = await cookiesClient.models.Space.list();
