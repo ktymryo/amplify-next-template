@@ -5,13 +5,13 @@ const schema = a.schema({
     .model({
       content: a.string(),
     })
-    .authorization((allow) => [allow.authenticated("identityPool")]),
+    .authorization((allow) => [allow.authenticated("identityPool"), allow.guest()]),
   
   Space: a
     .model({
       name: a.string(),
     })
-    .authorization((allow) => [allow.authenticated("identityPool")]),
+    .authorization((allow) => [allow.authenticated("identityPool"), allow.guest()]),
   
   StorageItem: a
     .model({
@@ -19,7 +19,7 @@ const schema = a.schema({
       parentId: a.id(),
     })
     .secondaryIndexes((index) => [index("parentId")])
-    .authorization((allow) => [allow.authenticated("identityPool")]),
+    .authorization((allow) => [allow.authenticated("identityPool"), allow.guest()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
