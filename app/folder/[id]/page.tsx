@@ -11,18 +11,24 @@ export default async function FolderPage({
   
   console.log(`=== Loading folder: ${id} ===`);
   
-  // 現在のフォルダ情報を取得
-  const currentFolder = await cookiesClient.models.StorageItem.get({ id });
+  let currentFolder;
+  let children;
+  let breadcrumb: string[] = [];
   
-  // 子フォルダ一覧を取得
-  const children = await cookiesClient.models.StorageItem.list({
-    filter: { parentId: { eq: id } }
-  });
+  if (id === 'root') {
+    // ルート表示
+    currentFolder = { data: { id: 'root', name: 'Root', parentId: null } };
+    children = await cookiesClient.models.StorageItem.list({
+      filter: { parentId: { attributeExists: false } }
+    });
+  } else {
+    // 通常のフォルダ
+    currentFolder = await cookiesClient.models.StorageItem.get({ id });
+    children = await cookiesClient.models.StorageItem.listStorageItemByParentId({ parentId: id });
+    breadcrumb = await getBreadcrumbData(id);
+  }
   
-  // パンくずリストを取得（再帰的にStorageItem.get()を複数回実行）
-  const breadcrumb = await getBreadcrumbData(id);
-  
-  console.log(`=== Folder loaded: ${breadcrumb.length} levels ===`);
+  console.log(`=== Folder loaded: ${children.data.length} items ===`);
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
@@ -30,7 +36,7 @@ export default async function FolderPage({
       
       {/* パンくずリスト */}
       <div style={{ marginBottom: '20px', padding: '10px', background: '#f5f5f5', borderRadius: '4px' }}>
-        <Link href="/folder/item-1" style={{ color: '#0066cc' }}>🏠 Root</Link>
+        <Link href="/folder/root" style={{ color: '#0066cc' }}>🏠 Root</Link>
         {breadcrumb.map((name, i) => (
           <span key={i}> / {name}</span>
         ))}
@@ -45,6 +51,14 @@ export default async function FolderPage({
             style={{ color: '#0066cc', textDecoration: 'none' }}
           >
             ⬆️ 上の階層へ
+          </Link>
+        )}
+        {id !== 'root' && !currentFolder.data?.parentId && (
+          <Link 
+            href="/folder/root"
+            style={{ color: '#0066cc', textDecoration: 'none' }}
+          >
+            ⬆️ ルートへ
           </Link>
         )}
       </div>

@@ -15,19 +15,58 @@ export default async function SetupPage({
       name: 'Test Space',
     });
 
-    // 20階層のStorageItem作成
-    let parentId: string | null = null;
-    for (let i = 1; i <= 20; i++) {
-      const itemId = i === 20 ? 'test-item-id' : `item-${i}`;
-      await cookiesClient.models.StorageItem.create({
-        id: itemId,
-        name: `Item Level ${i}`,
-        parentId: parentId,
-      });
-      parentId = itemId;
-    }
+    // ルートフォルダ作成（3つ）
+    await cookiesClient.models.StorageItem.create({
+      id: 'root-1',
+      name: 'Folder A',
+      parentId: null,
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'root-2',
+      name: 'Folder B',
+      parentId: null,
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'root-3',
+      name: 'Folder C',
+      parentId: null,
+    });
 
-    redirect('/test-faithful');
+    // Folder Aの子フォルダ（3つ）
+    await cookiesClient.models.StorageItem.create({
+      id: 'a-1',
+      name: 'Folder A-1',
+      parentId: 'root-1',
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'a-2',
+      name: 'Folder A-2',
+      parentId: 'root-1',
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'a-3',
+      name: 'Folder A-3',
+      parentId: 'root-1',
+    });
+
+    // Folder Bの子フォルダ（3つ）
+    await cookiesClient.models.StorageItem.create({
+      id: 'b-1',
+      name: 'Folder B-1',
+      parentId: 'root-2',
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'b-2',
+      name: 'Folder B-2',
+      parentId: 'root-2',
+    });
+    await cookiesClient.models.StorageItem.create({
+      id: 'b-3',
+      name: 'Folder B-3',
+      parentId: 'root-2',
+    });
+
+    redirect('/test-faithful/setup');
   }
 
   return (
