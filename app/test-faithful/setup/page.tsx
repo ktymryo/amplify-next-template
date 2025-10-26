@@ -15,17 +15,17 @@ export default async function SetupPage({
       name: 'Test Space',
     });
 
-    // 3つのフォルダを作成し、各フォルダに100個のファイルを作成
+    // 3つのフォルダを作成し、各フォルダに30個のファイルを作成
     const folders = ['folder-a', 'folder-b', 'folder-c'];
     
     for (const folderId of folders) {
       await cookiesClient.models.StorageItem.create({
         id: folderId,
-        name: `Folder ${folderId.split('-')[1].toUpperCase()} (100 files)`,
+        name: `Folder ${folderId.split('-')[1].toUpperCase()} (30 files)`,
         parentId: null,
       });
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 30; i++) {
         await cookiesClient.models.StorageItem.create({
           id: `${folderId}-file-${i}`,
           name: `file-${i}.txt`,
@@ -39,7 +39,7 @@ export default async function SetupPage({
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Setup Test Data (3 folders with 100 files each)</h1>
+      <h1>Setup Test Data (3 folders with 30 files each)</h1>
       <form>
         <input type="hidden" name="action" value="create" />
         <button type="submit">Create Test Data</button>
