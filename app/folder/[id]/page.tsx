@@ -40,7 +40,14 @@ export default async function FolderPage({
         <h3>📂 All Folders</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           <li style={{ marginBottom: '5px' }}>
-            <Link href="/folder/root" style={{ color: '#0066cc', textDecoration: 'none' }}>
+            <Link href="/folder/root" style={{ 
+              display: 'block',
+              padding: '10px',
+              color: '#0066cc', 
+              textDecoration: 'none',
+              background: '#fff',
+              borderRadius: '4px'
+            }}>
               🏠 Root
             </Link>
           </li>
@@ -49,9 +56,13 @@ export default async function FolderPage({
               <Link 
                 href={`/folder/${folder.id}`}
                 style={{ 
+                  display: 'block',
+                  padding: '10px',
                   color: folder.id === id ? '#ff6600' : '#0066cc',
                   textDecoration: 'none',
-                  fontWeight: folder.id === id ? 'bold' : 'normal'
+                  fontWeight: folder.id === id ? 'bold' : 'normal',
+                  background: folder.id === id ? '#ffe6cc' : '#fff',
+                  borderRadius: '4px'
                 }}
               >
                 📁 {folder.name}
