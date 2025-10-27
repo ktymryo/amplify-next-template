@@ -10,21 +10,20 @@ export default async function SetupPage({
   
   if (params.action === 'delete') {
     // 全StorageItemを削除
-    const allItems = [];
     let token: string | null | undefined = undefined;
     
     const firstResponse = await cookiesClient.models.StorageItem.list();
-    allItems.push(...firstResponse.data);
+    for (const item of firstResponse.data) {
+      await cookiesClient.models.StorageItem.delete({ id: item.id });
+    }
     token = firstResponse.nextToken;
     
     while (token) {
       const response = await cookiesClient.models.StorageItem.list({ nextToken: token });
-      allItems.push(...response.data);
+      for (const item of response.data) {
+        await cookiesClient.models.StorageItem.delete({ id: item.id });
+      }
       token = response.nextToken;
-    }
-
-    for (const item of allItems) {
-      await cookiesClient.models.StorageItem.delete({ id: item.id });
     }
 
     // 全Spaceを削除
